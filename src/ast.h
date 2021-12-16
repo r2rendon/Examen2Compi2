@@ -166,11 +166,11 @@ class AssignationStatement: public Statement{
         AssignationStatement(string id, Expr * value, ExprList expressions){
             this->id = id;
             this->value = value;
-            this->expressions = expressions;
+            // this->expressions = expressions;
         }
         string id;
         Expr * value;
-        ExprList expressions;
+        // ExprList expressions;
         string genCode();
         StatementKind getKind(){return ASSIGNATION_STATEMENT;}
 };
