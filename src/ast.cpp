@@ -146,7 +146,34 @@ string IfStatement::genCode(){
 }
 
 void MethodInvocationExpr::genCode(Code &code){
-    
+    list<Expr *>::iterator it = this->expressions.begin();
+    list<Code> codes;
+    stringstream ss;
+    Code argCode;
+    while (it != this->expressions.end())
+    {
+        (*it)->genCode(argCode);
+        ss << argCode.code <<endl;
+        codes.push_back(argCode);
+        it++;
+    }
+
+    int i = 0;
+    list<Code>::iterator placesIt = codes.begin();
+    while (placesIt != codes.end())
+    {
+        releaseFloatTemp((*placesIt).place);
+        ss << "mfc1 $a"<<i<<", "<< (*placesIt).place<<endl;
+        i++;
+        placesIt++;
+    }
+
+    ss<< "jal "<< this->id<<endl;
+    string reg;
+    reg = getFloatTemp();
+        ss << "mtc1 $v0, "<< reg<<endl;
+    code.code = ss.str();
+    code.place = reg;
 }
 
 string AssignationStatement::genCode(){
@@ -210,7 +237,20 @@ void ReadFloatExpr::genCode(Code &code){
 }
 
 string PrintStatement::genCode(){
-    return "Print statement code generation\n";
+    Code exprCode;
+    list<Expr *>::iterator it = this->expressions.begin();
+    while (it != this->expressions.end())
+    {   
+        (*it)->genCode(exprCode);
+        it++;
+    }
+    releaseFloatTemp(exprCode.place);
+    stringstream code;
+    code<< exprCode.code<<endl;
+    code << "mov.s $f12, "<< exprCode.place<<endl
+        << "li $v0, 2"<<endl
+        << "syscall"<<endl;
+    return code.str();
 }
 
 string ReturnStatement::genCode(){
