@@ -101,7 +101,7 @@ void SubExpr::genCode(Code &code){
     releaseFloatTemp(leftCode.place);
     releaseFloatTemp(rightCode.place);
     string newTempReg = getFloatTemp();
-    code.code = "sub.s " + newTempReg + ", " + leftCode.place + ", " + rightCode.place;
+    code.code = "sub.s " + newTempReg + ", " + leftCode.place + ", " + rightCode.place + "\n";
     code.place = newTempReg;
 }
 
@@ -114,7 +114,7 @@ void DivExpr::genCode(Code &code){
     releaseFloatTemp(leftCode.place);
     releaseFloatTemp(rightCode.place);
     string newTempReg = getFloatTemp();
-    code.code = "div.s " + newTempReg + ", " + leftCode.place + ", " + rightCode.place;
+    code.code = "div.s " + newTempReg + ", " + leftCode.place + ", " + rightCode.place + "\n";
     code.place = newTempReg;
 }
 
